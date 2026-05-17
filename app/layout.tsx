@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
+
 import "./globals.css";
 import "@fontsource/inter/400.css";
 import "@fontsource/inter/500.css";
@@ -8,6 +10,8 @@ import "@fontsource/playfair-display/600.css";
 import "@fontsource/playfair-display/700.css";
 import "@fontsource/amiri/400.css";
 import "@fontsource/amiri/700.css";
+
+import Navbar from "@/components/Navbar";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://muslimlocker.app"),
@@ -37,7 +41,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body>{children}</body>
+      <body>
+        <Navbar />
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
