@@ -1,4 +1,12 @@
-await resend.emails.send({
+import { Resend } from 'resend';
+import { NextResponse } from 'next/server';
+
+const resend = new Resend(process.env.RESEND_API_KEY!);
+
+export async function POST(req: Request) {
+  const { email } = await req.json();
+
+  await resend.emails.send({
   from: `Muslim Locker <noreply@resend.dev>`,
   to: email,
   subject: "You're in. The journey starts now. 🤍",
@@ -71,4 +79,7 @@ await resend.emails.send({
       </div>
     </div>
   `
-});
+  });
+
+  return NextResponse.json({ ok: true });
+}
