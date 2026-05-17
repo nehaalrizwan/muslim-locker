@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --font-inter: "Inter";
+  --font-playfair: "Playfair Display";
+  --font-amiri: "Amiri";
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: #f8f7f4;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #f8f7f4;
+  color: #17211c;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: rgba(201, 168, 76, 0.32);
+}
+
+@layer base {
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-playfair), Georgia, serif;
+    letter-spacing: 0;
+  }
+
+  a {
+    text-underline-offset: 4px;
+  }
+}
+
+@layer utilities {
+  .container-px {
+    @apply px-5 sm:px-8 lg:px-12;
+  }
+
+  .hairline {
+    border-color: rgba(13, 75, 53, 0.12);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
