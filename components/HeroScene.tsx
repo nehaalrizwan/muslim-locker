@@ -10,6 +10,7 @@ function PrayerPhone({ scrollYProgress }: { scrollYProgress: MotionValue<number>
   const beadOne = useRef<Mesh>(null);
   const beadTwo = useRef<Mesh>(null);
   const beadThree = useRef<Mesh>(null);
+  const particlesRef = useRef<(Mesh | null)[]>([]);
   const rotation = useSpring(useTransform(scrollYProgress, [0, 1], [0, 0.55]), {
     stiffness: 70,
     damping: 18
@@ -21,6 +22,19 @@ function PrayerPhone({ scrollYProgress }: { scrollYProgress: MotionValue<number>
       [-1.28, -1.05, 0.1],
       [-0.88, -1.15, 0.12]
     ],
+    []
+  );
+
+  const particleData = useMemo(
+    () =>
+      Array.from({ length: 36 }, (_, index) => ({
+        x: (Math.random() - 0.5) * 1.8,
+        y: Math.random() * 2 - 1.2,
+        z: (Math.random() - 0.5) * 0.8,
+        scale: 0.032 + Math.random() * 0.04,
+        color: Math.random() > 0.6 ? "#C9A84C" : "#FFFFFF",
+        id: index
+      })),
     []
   );
 
@@ -37,6 +51,15 @@ function PrayerPhone({ scrollYProgress }: { scrollYProgress: MotionValue<number>
       if (bead.current) {
         bead.current.position.y =
           beadPositions[index][1] + Math.sin(time * 1.4 + index) * 0.035;
+      }
+    });
+
+    particleData.forEach((base, index) => {
+      const particle = particlesRef.current[index];
+      if (particle) {
+        particle.position.y = base.y + Math.sin(time * 0.95 + index) * 0.04 + ((time * 0.1 + index * 0.12) % 0.8 - 0.4);
+        particle.rotation.x += 0.006;
+        particle.rotation.y += 0.008;
       }
     });
   });
@@ -82,6 +105,19 @@ function PrayerPhone({ scrollYProgress }: { scrollYProgress: MotionValue<number>
         <torusGeometry args={[0.86, 0.014, 12, 72, 2.2]} />
         <meshStandardMaterial color="#C9A84C" roughness={0.5} />
       </mesh>
+      {particleData.map((particle, index) => (
+        <mesh
+          key={particle.id}
+          ref={(el) => {
+            particlesRef.current[index] = el;
+          }}
+          position={[particle.x, particle.y, particle.z]}
+          scale={[particle.scale, particle.scale, particle.scale]}
+        >
+          <sphereGeometry args={[1, 12, 12]} />
+          <meshStandardMaterial color={particle.color} emissive={particle.color} emissiveIntensity={0.7} toneMapped={false} />
+        </mesh>
+      ))}
     </group>
   );
 }
@@ -99,7 +135,7 @@ export function HeroScene({
         shadows
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       >
-        <ambientLight intensity={1.2} />
+        <ambientLight intensity={1.4} />
         <directionalLight
           position={[2.8, 4.2, 4]}
           intensity={2.2}
@@ -107,7 +143,8 @@ export function HeroScene({
           shadow-mapSize-width={1024}
           shadow-mapSize-height={1024}
         />
-        <pointLight position={[-3, 1.5, 2]} intensity={1.1} color="#C9A84C" />
+        <pointLight position={[-1.8, 0.8, 2]} intensity={0.8} color="#C9A84C" />
+        <pointLight position={[1.2, 1.5, 1.8]} intensity={0.8} color="#FFFFFF" />
         <PrayerPhone scrollYProgress={scrollYProgress} />
       </Canvas>
     </div>

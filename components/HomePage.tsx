@@ -2,6 +2,7 @@
 
 import { motion, useScroll } from "framer-motion";
 import dynamic from "next/dynamic";
+import { FormEvent, useMemo, useRef, useState } from "react";
 import { Faq } from "@/components/Faq";
 import { ModeExplorer } from "@/components/ModeExplorer";
 import { SectionReveal } from "@/components/SectionReveal";
@@ -58,112 +59,206 @@ const trustItems = [
 
 export function HomePage() {
   const { scrollYProgress } = useScroll();
+  const [email, setEmail] = useState("");
+  const [waitlistSubmitted, setWaitlistSubmitted] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
+
+  const confettiPieces = useMemo(
+    () =>
+      Array.from({ length: 26 }, (_, index) => ({
+        id: index,
+        left: 6 + (index * 3.7) % 82,
+        size: 4 + (index % 3),
+        rotation: Math.random() * 180,
+        delay: index * 0.03,
+        color: Math.random() > 0.55 ? "#C9A84C" : "#FFFFFF"
+      })),
+    []
+  );
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!email.trim()) return;
+
+    setWaitlistSubmitted(true);
+    setShowConfetti(true);
+
+    window.setTimeout(() => {
+      setShowConfetti(false);
+    }, 1800);
+  };
 
   return (
-    <main className="min-h-screen overflow-hidden bg-bone bg-paper">
+    <main className="min-h-screen overflow-hidden bg-white text-emerald">
       <SmoothScroll />
 
-      <motion.header
-        initial={{ opacity: 0, y: -18 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.55 }}
-        className="container-px fixed left-0 right-0 top-0 z-50"
-      >
-        <nav className="mx-auto mt-4 flex max-w-7xl items-center justify-between rounded-lg border border-white/70 bg-white/[0.82] px-4 py-3 shadow-soft backdrop-blur-xl">
-          <a href="#top" className="flex items-center gap-3 font-semibold text-emerald">
-            <span className="grid h-9 w-9 place-items-center rounded-md bg-emerald text-lg font-bold text-gold">
-              ML
-            </span>
-            <span>Muslim Locker</span>
-          </a>
-          <div className="hidden items-center gap-7 text-sm font-medium text-emerald/[0.78] md:flex">
-            <a href="#method">Method</a>
-            <a href="#platform">Platform</a>
-            <a href="#trust">Trust</a>
-          </div>
-          <motion.a
-            href="#waitlist"
-            whileHover={{ y: -2 }}
-            whileTap={{ scale: 0.98 }}
-            className="rounded-md bg-gold px-4 py-2 text-sm font-bold text-emerald shadow-gold outline-none focus-visible:ring-4 focus-visible:ring-gold/30"
-          >
-            Join beta
-          </motion.a>
-        </nav>
-      </motion.header>
+      <section id="top" className="relative overflow-hidden bg-white">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,1)_0%,_rgba(240,247,244,0.72)_55%,_rgba(240,247,244,0.4)_100%)]" />
+        <div className="pointer-events-none absolute right-0 bottom-0 h-[520px] w-[520px] opacity-10">
+          <svg viewBox="0 0 300 300" className="h-full w-full">
+            <defs>
+              <pattern id="hero-pattern" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+                <path d="M30 0 L60 0 L60 30 M0 30 L0 60 L30 60" stroke="#014421" strokeWidth="1" opacity="0.14" />
+              </pattern>
+            </defs>
+            <rect width="300" height="300" fill="url(#hero-pattern)" />
+          </svg>
+        </div>
 
-      <section id="top" className="relative min-h-[92svh] pt-28 sm:pt-32">
-        <HeroScene scrollYProgress={scrollYProgress} />
-        <div className="container-px relative z-10 mx-auto grid max-w-7xl gap-12 pb-16 lg:grid-cols-[1.03fr_.97fr] lg:items-center lg:pb-24">
-          <div className="max-w-3xl">
-            <motion.p
+        <div className="relative z-10 container-px mx-auto grid min-h-screen items-center gap-10 py-28 lg:grid-cols-[0.6fr_0.4fr]">
+          <div className="space-y-8">
+            <motion.div
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55, delay: 0.1 }}
-              className="inline-flex rounded-md border border-gold/[0.35] bg-white/[0.76] px-3 py-2 text-xs font-bold uppercase tracking-[0.22em] text-emerald backdrop-blur"
+              transition={{ duration: 0.6 }}
+              className="relative inline-flex items-center gap-3 overflow-hidden rounded-full border border-[#C9A84C]/40 bg-white/80 px-4 py-2 text-sm font-semibold text-emerald shadow-soft"
             >
-              Pray before you scroll
-            </motion.p>
-            <motion.h1
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.72, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
-              className="mt-7 max-w-4xl text-6xl font-semibold leading-[0.95] text-emerald sm:text-7xl lg:text-8xl"
-            >
-              Muslim Locker
-            </motion.h1>
-            <motion.p
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.72, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
-              className="mt-6 max-w-2xl text-lg leading-8 text-ink/[0.72] sm:text-xl"
-            >
-              A premium Islamic habit-tracking app designed to interrupt phone
-              compulsion at prayer time, protect your Salah, and keep your progress
-              private.
-            </motion.p>
+              <span className="grid h-8 w-8 place-items-center rounded-full bg-[#F9F1D4] text-lg text-[#C9A84C] shadow-inner">
+                🌙
+              </span>
+              <span className="relative overflow-hidden">
+                <span className="relative z-10">Now in Beta</span>
+                <motion.span
+                  className="pointer-events-none absolute inset-y-0 left-[-120px] w-24 rounded-full bg-gradient-to-r from-transparent via-[#C9A84C]/40 to-transparent"
+                  animate={{ x: ["-120%", "180%"] }}
+                  transition={{ duration: 2.2, repeat: Infinity, ease: "linear" }}
+                />
+              </span>
+            </motion.div>
+
             <motion.div
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.72, delay: 0.38, ease: [0.22, 1, 0.36, 1] }}
-              className="mt-8 flex flex-col gap-3 sm:flex-row"
+              initial="hidden"
+              animate="visible"
+              variants={{ visible: { transition: { staggerChildren: 0.08 } } }}
+              className="max-w-3xl"
             >
-              <motion.a
-                href="#waitlist"
-                whileHover={{ y: -3 }}
-                whileTap={{ scale: 0.98 }}
-                className="grid min-h-12 place-items-center rounded-md bg-gold px-6 text-sm font-bold text-emerald shadow-gold outline-none focus-visible:ring-4 focus-visible:ring-gold/30"
+              {['Pray', 'First.', 'Then', 'Scroll.'].map((word, index) => (
+                <motion.span
+                  key={`${word}-${index}`}
+                  variants={{ hidden: { opacity: 0, y: 28 }, visible: { opacity: 1, y: 0 } }}
+                  className="block text-5xl font-semibold leading-[0.92] text-emerald sm:text-[72px] lg:text-[72px]"
+                >
+                  {word}
+                </motion.span>
+              ))}
+            </motion.div>
+
+            <motion.p
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.32 }}
+              className="max-w-2xl text-[20px] leading-8 text-ink/70"
+            >
+              Muslim Locker blocks your phone until you complete your Salah. Build the habit. Strengthen the deen.
+            </motion.p>
+
+            <motion.form
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.4 }}
+              onSubmit={handleSubmit}
+              className="relative flex flex-col gap-3 sm:flex-row"
+            >
+              <div className="relative flex-1">
+                <input
+                  type="email"
+                  name="email"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  placeholder="Enter your email"
+                  required
+                  className="h-14 w-full rounded-full border border-emerald/15 bg-white px-5 text-base text-emerald outline-none transition focus:border-[#C9A84C] focus:ring-4 focus:ring-[#C9A84C]/15"
+                />
+                {showConfetti && (
+                  <div className="pointer-events-none absolute inset-0 overflow-hidden">
+                    {confettiPieces.map((piece) => (
+                      <motion.span
+                        key={piece.id}
+                        className="absolute rounded-full"
+                        style={{
+                          left: `${piece.left}%`,
+                          width: `${piece.size}px`,
+                          height: `${piece.size}px`,
+                          background: piece.color,
+                          transform: `rotate(${piece.rotation}deg)`
+                        }}
+                        initial={{ opacity: 1, y: 0, scale: 0.6 }}
+                        animate={{ opacity: 0, y: -70, scale: 1.4 }}
+                        transition={{
+                          delay: piece.delay,
+                          duration: 1.1,
+                          ease: "easeOut"
+                        }}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <button
+                type="submit"
+                className="min-h-14 rounded-full bg-[#C9A84C] px-8 text-sm font-semibold uppercase tracking-[0.06em] text-white shadow-[0_24px_60px_-36px_rgba(201,168,76,0.9)] transition duration-200 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-[#C9A84C]/30"
               >
-                Join private beta
-              </motion.a>
-              <motion.a
-                href="#platform"
-                whileHover={{ y: -3 }}
-                whileTap={{ scale: 0.98 }}
-                className="grid min-h-12 place-items-center rounded-md border border-emerald/[0.16] bg-white/[0.76] px-6 text-sm font-bold text-emerald outline-none backdrop-blur focus-visible:ring-4 focus-visible:ring-emerald/[0.15]"
+                Join Waitlist
+              </button>
+
+              <motion.div
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: waitlistSubmitted ? 1 : 0, y: waitlistSubmitted ? 0 : 14 }}
+                transition={{ duration: 0.4, delay: 0.1 }}
+                className="mt-2 text-sm font-semibold text-emerald/80 sm:mt-0 sm:ml-4 sm:self-center"
               >
-                See platform reality
-              </motion.a>
+                You're on the list! 🤍
+              </motion.div>
+            </motion.form>
+
+            <motion.div
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.48 }}
+              className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center"
+            >
+              <div className="flex items-center gap-3">
+                <div className="flex -space-x-3">
+                  {['AL', 'SM', 'AA', 'NY', 'FA'].map((initial, index) => (
+                    <div
+                      key={initial}
+                      className="grid h-11 w-11 place-items-center rounded-full border border-white bg-[#F7F5EB] text-xs font-bold text-emerald shadow-sm"
+                      style={{ zIndex: 20 - index }}
+                    >
+                      {initial}
+                    </div>
+                  ))}
+                </div>
+                <div className="text-sm text-ink/70">
+                  Join <span className="font-semibold text-emerald">2,400+</span> Muslims building better habits
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 text-sm text-ink/70">
+                <span className="font-semibold text-emerald">4.9</span>
+                <span className="flex items-center gap-1 text-[#C9A84C]">
+                  ★★★★★
+                </span>
+              </div>
             </motion.div>
           </div>
 
           <motion.div
-            initial={{ opacity: 0, x: 28 }}
+            initial={{ opacity: 0, x: 38 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.42, ease: [0.22, 1, 0.36, 1] }}
-            className="ml-auto w-full max-w-md lg:pt-28"
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="relative mx-auto w-full overflow-hidden rounded-[44px] border border-emerald/10 bg-[#F7FCF8] shadow-soft"
           >
-            <div className="rounded-lg border hairline bg-white/[0.84] p-5 shadow-soft backdrop-blur">
-              <p className="font-arabic text-3xl leading-relaxed text-emerald" dir="rtl" lang="ar">
-                إِنَّ الصَّلَاةَ كَانَتْ عَلَى الْمُؤْمِنِينَ كِتَابًا مَّوْقُوتًا
-              </p>
-              <p className="mt-4 text-sm leading-6 text-ink/[0.68]">
-                &ldquo;Indeed, prayer has been decreed upon the believers at specified
-                times.&rdquo;
-              </p>
-              <p className="mt-3 text-xs font-semibold uppercase tracking-[0.18em] text-gold">
-                Qur&apos;an 4:103
-              </p>
+            <div className="absolute inset-x-0 top-0 h-32 bg-white/70" />
+            <div className="relative h-[640px] w-full">
+              <HeroScene scrollYProgress={scrollYProgress} />
+              <div className="pointer-events-none absolute inset-x-8 bottom-8 rounded-3xl border border-white/70 bg-white/70 p-4 shadow-soft backdrop-blur">
+                <p className="text-sm font-semibold text-emerald">Prayer focus preview</p>
+                <p className="mt-1 text-xs leading-5 text-ink/60">
+                  Calm lock interface with a gentle Noor glow.
+                </p>
+              </div>
             </div>
           </motion.div>
         </div>
