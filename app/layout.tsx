@@ -1,36 +1,61 @@
 import type { Metadata } from "next";
-import { Analytics } from "@vercel/analytics/next";
+import { Amiri, Inter, Playfair_Display } from "next/font/google";
 
 import "./globals.css";
-import "@fontsource/inter/400.css";
-import "@fontsource/inter/500.css";
-import "@fontsource/inter/600.css";
-import "@fontsource/inter/700.css";
-import "@fontsource/playfair-display/600.css";
-import "@fontsource/playfair-display/700.css";
-import "@fontsource/amiri/400.css";
-import "@fontsource/amiri/700.css";
+import { AppShell } from "@/components/AppShell";
 
-import Navbar from "@/components/Navbar";
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap"
+});
+
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-playfair",
+  display: "swap"
+});
+
+const amiri = Amiri({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-amiri",
+  display: "swap"
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://muslimlocker.app"),
-  title: "Muslim Locker | Pray before you scroll",
+  title: "Muslim Locker — Pray First. Then Scroll.",
   description:
-    "A premium Islamic habit-tracking app designed to help Muslims protect Salah with focus locks, prayer accountability, and calm daily progress.",
+    "The app that locks your phone until you complete your Salah. Build the habit. Strengthen the deen.",
   openGraph: {
-    title: "Muslim Locker | Pray before you scroll",
+    title: "Muslim Locker — Pray First. Then Scroll.",
     description:
-      "Protect your daily Salah with platform-aware focus locks, prayer tracking, and gentle accountability.",
+      "The app that locks your phone until you complete your Salah. Build the habit. Strengthen the deen.",
     url: "https://muslimlocker.app",
     siteName: "Muslim Locker",
-    type: "website"
+    type: "website",
+    images: [
+      {
+        url: "/og-image.svg",
+        width: 1200,
+        height: 630,
+        alt: "Muslim Locker — Pray First. Then Scroll."
+      }
+    ]
   },
   twitter: {
     card: "summary_large_image",
-    title: "Muslim Locker | Pray before you scroll",
+    title: "Muslim Locker — Pray First. Then Scroll.",
     description:
-      "A restrained Islamic focus app for Muslims serious about praying on time."
+      "The app that locks your phone until you complete your Salah. Build the habit. Strengthen the deen.",
+    images: ["/og-image.svg"]
+  },
+  icons: {
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
+    apple: "/favicon.svg"
   }
 };
 
@@ -40,11 +65,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className={`${inter.variable} ${playfair.variable} ${amiri.variable} scroll-smooth`}>
       <body>
-        <Navbar />
-        {children}
-        <Analytics />
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   );

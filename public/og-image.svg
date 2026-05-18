@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#F8F7F4" />
+  <circle cx="960" cy="120" r="110" fill="#C9A84C" opacity="0.18" />
+  <path d="M350 120c-76 76-76 200 0 276 64 64 157 76 232 37-63-5-119-32-158-75-50-55-63-132-39-200 0 0-17 16-35 16z" fill="#014421" opacity="0.92" />
+  <text x="80" y="240" font-family="Inter, system-ui, sans-serif" font-size="72" font-weight="700" fill="#014421">Muslim Locker</text>
+  <text x="80" y="330" font-family="Inter, system-ui, sans-serif" font-size="38" fill="#17211C">Pray First. Then Scroll.</text>
+  <text x="80" y="395" font-family="Inter, system-ui, sans-serif" font-size="24" fill="#0D4B35">The app that locks your phone until you complete your Salah.</text>
+</svg>

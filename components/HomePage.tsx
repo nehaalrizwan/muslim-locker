@@ -4,13 +4,22 @@ import { motion, useScroll } from "framer-motion";
 import dynamic from "next/dynamic";
 import { FormEvent, useMemo, useRef, useState } from "react";
 import { Faq } from "@/components/Faq";
+import { FadeInWhenVisible } from "@/components/FadeInWhenVisible";
 import { ModeExplorer } from "@/components/ModeExplorer";
 import { SectionReveal } from "@/components/SectionReveal";
 import { SmoothScroll } from "@/components/SmoothScroll";
+import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { WaitlistForm } from "@/components/WaitlistForm";
+import { Ticker } from "@/components/Ticker";
+import { Features } from "@/components/Features";
 
 const HeroScene = dynamic(
   () => import("@/components/HeroScene").then((mod) => mod.HeroScene),
+  { ssr: false }
+);
+
+const HowItWorksSection = dynamic(
+  () => import("@/components/HowItWorksSection").then((mod) => mod.HowItWorksSection),
   { ssr: false }
 );
 
@@ -264,6 +273,16 @@ export function HomePage() {
         </div>
       </section>
 
+      {/* Continuous ticker */}
+      <Ticker />
+
+      {/* Features grid */}
+      <Features />
+
+      <HowItWorksSection />
+
+      <TestimonialsSection />
+
       <section className="container-px mx-auto max-w-7xl py-8">
         <SectionReveal>
           <div className="grid gap-3 border-y hairline py-5 text-sm text-emerald/[0.78] sm:grid-cols-3">
@@ -288,9 +307,11 @@ export function HomePage() {
           <p className="text-sm font-bold uppercase tracking-[0.22em] text-gold">
             The mechanism
           </p>
-          <h2 className="mt-4 text-4xl font-semibold leading-tight text-emerald sm:text-6xl">
-            Make the bad habit meet the better one.
-          </h2>
+          <FadeInWhenVisible>
+            <h2 className="mt-4 text-4xl font-semibold leading-tight text-emerald sm:text-6xl">
+              Make the bad habit meet the better one.
+            </h2>
+          </FadeInWhenVisible>
           <p className="mt-5 text-base leading-8 text-ink/[0.68] sm:text-lg">
             The app is not trying to prove worship. It is trying to make phone use
             less automatic at the exact moment prayer deserves attention.
@@ -323,9 +344,11 @@ export function HomePage() {
             <p className="text-sm font-bold uppercase tracking-[0.22em] text-gold">
               Product flow
             </p>
-            <h2 className="mt-4 text-4xl font-semibold leading-tight text-emerald sm:text-6xl">
-              A lock that needs mercy built into it.
-            </h2>
+            <FadeInWhenVisible>
+              <h2 className="mt-4 text-4xl font-semibold leading-tight text-emerald sm:text-6xl">
+                A lock that needs mercy built into it.
+              </h2>
+            </FadeInWhenVisible>
             <p className="mt-5 text-base leading-8 text-ink/[0.68] sm:text-lg">
               The failure mode is obvious: overlocking turns into resentment. A
               credible product needs emergency exits, legitimate exceptions, and
@@ -359,9 +382,11 @@ export function HomePage() {
           <p className="text-sm font-bold uppercase tracking-[0.22em] text-gold">
             Experience
           </p>
-          <h2 className="mt-4 text-4xl font-semibold leading-tight text-emerald sm:text-6xl">
-            Restrained by design. Serious by default.
-          </h2>
+          <FadeInWhenVisible>
+            <h2 className="mt-4 text-4xl font-semibold leading-tight text-emerald sm:text-6xl">
+              Restrained by design. Serious by default.
+            </h2>
+          </FadeInWhenVisible>
           <p className="mt-5 text-base leading-8 text-ink/[0.68] sm:text-lg">
             The product should feel like a spiritual utility, not another dopamine
             layer. The interface stays quiet so the decision is clear.
@@ -414,9 +439,11 @@ export function HomePage() {
             <p className="text-sm font-bold uppercase tracking-[0.22em] text-gold">
               Trust model
             </p>
-            <h2 className="mt-4 text-4xl font-semibold leading-tight text-emerald sm:text-6xl">
-              Build for sincerity, or lose the user.
-            </h2>
+            <FadeInWhenVisible>
+              <h2 className="mt-4 text-4xl font-semibold leading-tight text-emerald sm:text-6xl">
+                Build for sincerity, or lose the user.
+              </h2>
+            </FadeInWhenVisible>
           </div>
           <p className="text-base leading-8 text-ink/[0.68] sm:text-lg">
             Muslim Locker has to be more thoughtful than a generic app blocker with
@@ -440,15 +467,17 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="bg-white py-20 sm:py-28">
+      <section id="faq" className="bg-white py-20 sm:py-28">
         <div className="container-px mx-auto grid max-w-7xl gap-12 lg:grid-cols-[.9fr_1.1fr]">
           <SectionReveal>
             <p className="text-sm font-bold uppercase tracking-[0.22em] text-gold">
-              Hard questions
+              Frequently asked questions
             </p>
-            <h2 className="mt-4 text-4xl font-semibold leading-tight text-emerald sm:text-6xl">
-              The page should answer objections before the pitch call.
-            </h2>
+            <FadeInWhenVisible>
+              <h2 className="mt-4 text-4xl font-semibold leading-tight text-emerald sm:text-6xl">
+                Frequently asked questions
+              </h2>
+            </FadeInWhenVisible>
           </SectionReveal>
           <SectionReveal delay={0.08}>
             <Faq />
@@ -462,9 +491,11 @@ export function HomePage() {
             <p className="text-sm font-bold uppercase tracking-[0.22em] text-gold">
               Private beta
             </p>
-            <h2 className="mt-4 text-4xl font-semibold leading-tight text-emerald sm:text-6xl">
-              Join if the real problem is your phone, not your intention.
-            </h2>
+            <FadeInWhenVisible>
+              <h2 className="mt-4 text-4xl font-semibold leading-tight text-emerald sm:text-6xl">
+                Join if the real problem is your phone, not your intention.
+              </h2>
+            </FadeInWhenVisible>
             <p className="mt-5 text-base leading-8 text-ink/[0.68] sm:text-lg">
               Early access will prioritize Muslims who want stronger Android
               blocking, honest iOS constraints, and a calmer way to protect daily
@@ -490,12 +521,7 @@ export function HomePage() {
         </div>
       </section>
 
-      <footer className="container-px mx-auto max-w-7xl border-t hairline py-8">
-        <div className="flex flex-col gap-3 text-sm text-emerald/[0.68] sm:flex-row sm:items-center sm:justify-between">
-          <p>Muslim Locker</p>
-          <p>Built for a private beta, not broad claims.</p>
-        </div>
-      </footer>
+      <Footer />
     </main>
   );
 }
