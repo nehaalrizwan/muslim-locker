@@ -54,7 +54,7 @@ function createNumberTexture(label: string) {
   context.fillText(label, size / 2, size / 2);
 
   const texture = new THREE.CanvasTexture(canvas);
-  texture.encoding = THREE.sRGBEncoding;
+  texture.colorSpace = THREE.SRGBColorSpace;
   texture.needsUpdate = true;
   return texture;
 }
