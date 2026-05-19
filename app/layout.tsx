@@ -3,6 +3,7 @@ import { Amiri, Inter, Playfair_Display } from "next/font/google";
 
 import "./globals.css";
 import { AppShell } from "@/components/AppShell";
+import InteractiveQuran from '@/components/InteractiveQuran';
 
 const inter = Inter({
   subsets: ["latin"],
@@ -68,6 +69,7 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${playfair.variable} ${amiri.variable} scroll-smooth`}>
       <body>
         <AppShell>{children}</AppShell>
+        <InteractiveQuran />
       </body>
     </html>
   );
