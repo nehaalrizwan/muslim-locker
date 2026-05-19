@@ -12,6 +12,7 @@ import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { WaitlistForm } from "@/components/WaitlistForm";
 import { Ticker } from "@/components/Ticker";
 import { Features } from "@/components/Features";
+import DailyAyah from "@/components/DailyAyah";
 import { Footer } from "@/components/Footer";
 
 const HeroScene = dynamic(
@@ -20,7 +21,7 @@ const HeroScene = dynamic(
 );
 
 const HowItWorksSection = dynamic(
-  () => import("@/components/HowItWorksSection").then((mod) => mod.HowItWorksSection),
+  () => import("@/components/HowItWorksSection"),
   { ssr: false }
 );
 
@@ -279,6 +280,10 @@ export function HomePage() {
 
       {/* Features grid */}
       <Features />
+
+      <section className="py-20 px-4 bg-gradient-to-b from-white to-emerald-50">
+        <DailyAyah />
+      </section>
 
       <HowItWorksSection />
 
