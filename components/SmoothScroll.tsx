@@ -8,8 +8,7 @@ export function SmoothScroll() {
     const lenis = new Lenis({
       lerp: 0.1,
       wheelMultiplier: 0.9,
-      touchMultiplier: 1.2,
-      smooth: true
+      touchMultiplier: 1.2
     });
 
     let frame = 0;

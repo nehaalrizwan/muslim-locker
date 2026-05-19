@@ -4,9 +4,18 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { motion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
-const stepData = [
+interface StepData {
+  title: string;
+  copy: string;
+  label: string;
+  color: string;
+  accent: string;
+  icon: "calendar" | "lock" | "check";
+  position: [number, number, number];
+}
+
+const stepData: StepData[] = [
   {
     title: "Set Your Prayer Times",
     copy: "Choose your Salah windows and let the app follow your schedule with quiet certainty.",
@@ -76,23 +85,36 @@ function CameraRig() {
 
 function OrbitControlsWrapper() {
   const { camera, gl } = useThree();
-  const controlsRef = useRef<OrbitControls | null>(null);
+  const controlsRef = useRef<any>(null);
 
   useEffect(() => {
-    controlsRef.current = new OrbitControls(camera, gl.domElement);
-    const controls = controlsRef.current;
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.12;
-    controls.minDistance = 6.5;
-    controls.maxDistance = 10;
-    controls.minPolarAngle = Math.PI / 3.2;
-    controls.maxPolarAngle = Math.PI / 2.1;
-    controls.minAzimuthAngle = -Math.PI / 5;
-    controls.maxAzimuthAngle = Math.PI / 5;
-    controls.enablePan = false;
-    controls.rotateSpeed = 0.45;
+    let controls: any;
+    let canceled = false;
 
-    return () => controls.dispose();
+    async function init() {
+      // @ts-ignore missing type declarations for the three examples import
+      const module = await import("three/examples/jsm/controls/OrbitControls");
+      if (canceled) return;
+      controls = new module.OrbitControls(camera, gl.domElement);
+      controlsRef.current = controls;
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.12;
+      controls.minDistance = 6.5;
+      controls.maxDistance = 10;
+      controls.minPolarAngle = Math.PI / 3.2;
+      controls.maxPolarAngle = Math.PI / 2.1;
+      controls.minAzimuthAngle = -Math.PI / 5;
+      controls.maxAzimuthAngle = Math.PI / 5;
+      controls.enablePan = false;
+      controls.rotateSpeed = 0.45;
+    }
+
+    init();
+
+    return () => {
+      canceled = true;
+      controls?.dispose();
+    };
   }, [camera, gl]);
 
   useFrame(() => {
@@ -177,13 +199,15 @@ function PlatformIcon({ type }: { type: string }) {
 }
 
 function CheckIcon() {
-  const geometry = useMemo(() => {
+  const checkLine = useMemo(() => {
     const points = [
       new THREE.Vector3(-0.32, 0.18, 0),
       new THREE.Vector3(-0.06, -0.08, 0),
       new THREE.Vector3(0.36, 0.24, 0)
     ];
-    return new THREE.BufferGeometry().setFromPoints(points);
+    const geometry = new THREE.BufferGeometry().setFromPoints(points);
+    const material = new THREE.LineBasicMaterial({ color: "#0D4B35", linewidth: 4 });
+    return new THREE.Line(geometry, material);
   }, []);
 
   return (
@@ -192,9 +216,7 @@ function CheckIcon() {
         <boxGeometry args={[0.9, 0.18, 0.9]} />
         <meshStandardMaterial color="#F8F7F4" metalness={0.2} roughness={0.5} />
       </mesh>
-      <line geometry={geometry}>
-        <lineBasicMaterial color="#0D4B35" linewidth={4} />
-      </line>
+      <primitive object={checkLine} />
     </group>
   );
 }
@@ -207,7 +229,7 @@ function Platform({
   onPointerOut
 }: {
   index: number;
-  config: typeof stepData[number];
+  config: StepData;
   active: boolean;
   onPointerOver: () => void;
   onPointerOut: () => void;
@@ -249,22 +271,16 @@ function ConnectionLines() {
     ],
     []
   );
-  const geometry = useMemo(() => {
+  const line = useMemo(() => {
     const geo = new THREE.BufferGeometry().setFromPoints(points);
     geo.computeBoundingSphere();
-    return geo;
+    const material = new THREE.LineDashedMaterial({ color: "#C9A84C", dashSize: 0.18, gapSize: 0.12, linewidth: 1 });
+    const lineObj = new THREE.Line(geo, material);
+    lineObj.computeLineDistances();
+    return lineObj;
   }, [points]);
-  const lineRef = useRef<THREE.Line>(null);
 
-  useEffect(() => {
-    lineRef.current?.computeLineDistances();
-  }, []);
-
-  return (
-    <line ref={lineRef} geometry={geometry}>
-      <lineDashedMaterial color="#C9A84C" dashSize={0.18} gapSize={0.12} linewidth={1} />
-    </line>
-  );
+  return <primitive object={line} />;
 }
 
 export function HowItWorksSection() {

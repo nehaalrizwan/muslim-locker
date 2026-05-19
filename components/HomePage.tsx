@@ -12,6 +12,7 @@ import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { WaitlistForm } from "@/components/WaitlistForm";
 import { Ticker } from "@/components/Ticker";
 import { Features } from "@/components/Features";
+import { Footer } from "@/components/Footer";
 
 const HeroScene = dynamic(
   () => import("@/components/HeroScene").then((mod) => mod.HeroScene),
